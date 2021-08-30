@@ -9,7 +9,7 @@ use structopt::StructOpt;
 #[derive(StructOpt)]
 enum Command {
     Now {
-        item: String,
+        item: Vec<String>,
     },
 
     Done,
@@ -20,7 +20,7 @@ enum Command {
 fn main() {
 
     match Command::from_args() {
-        Command::Now { item } => { Record::start(&item).save().unwrap(); }
+        Command::Now { item } => { Record::start(&item.join(" ")).save().unwrap(); }
         Command::Done => { 
             match Current::open() {
                 Some(current) => {
@@ -34,7 +34,7 @@ fn main() {
                     record_store.save();
                 }
                 None => {
-                    println!("You are currently not tracking anything, to start tracking type `working on <your item>`");
+                    println!("You are currently not tracking anything, to start tracking type `dong now <your item>`");
                 },
             }
         },
@@ -43,7 +43,9 @@ fn main() {
                 Some(current) => {
                     println!("Working on {}, for {} seconds", current.item(), chrono::Local::now().timestamp() - current.starting_timestamp());
                 }, 
-                None => todo!(),
+                None => {
+                    println!("You are currently not tracking anything, to start tracking type `dong now <your item>`");
+                },
             }
         },
     }

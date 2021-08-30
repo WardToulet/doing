@@ -26,7 +26,7 @@ impl RecordStore for CsvRecordStore {
 
 impl CsvRecordStore {
     pub fn open() -> Self {
-        let file = std::fs::File::open("working.csv").unwrap();
+        let file = std::fs::File::open("doing.csv").unwrap();
         let mut reader = csv::Reader::from_reader(file);
 
         let records: Vec<Record> = reader.deserialize().map(|x| x.unwrap()).collect();
@@ -37,7 +37,7 @@ impl CsvRecordStore {
     }
 
     pub fn save(self) {
-        let file = std::fs::File::create("working.csv").unwrap();
+        let file = std::fs::File::create("doing.csv").unwrap();
         let mut writer = csv::Writer::from_writer(file);
 
         for rec in self.records {
