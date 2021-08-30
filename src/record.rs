@@ -81,4 +81,8 @@ impl Current {
     pub fn save(self) -> std::io::Result<()> {
         fs::write(".workingon", format!("{}|{}", self.starting_timestamp, self.item))
     }
+
+    pub fn clear() -> std::io::Result<()> {
+        fs::write(".workingon", "") 
+    }
 }
