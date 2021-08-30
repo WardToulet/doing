@@ -65,7 +65,7 @@ impl Current {
     /// Look at the file on disk holding the current tracking info
     pub fn open() -> Option<Current> {
         let raw = fs::read_to_string(".workingon").ok()?;
-        let mut iter = raw.split(' ');
+        let mut iter = raw.split('|');
 
         let starting_timestamp = iter.next()?.parse::<i64>().ok()?;
         let item = iter.next()?.into();
@@ -79,6 +79,6 @@ impl Current {
     }
 
     pub fn save(self) -> std::io::Result<()> {
-        fs::write(".workingon", format!("{} {}", self.starting_timestamp, self.item))
+        fs::write(".workingon", format!("{}|{}", self.starting_timestamp, self.item))
     }
 }
