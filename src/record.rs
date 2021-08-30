@@ -1,3 +1,5 @@
+use std::fs;
+
 use serde::{Serialize, Deserialize};
 
 /// A recordig of a task, it includes basic information about the task, the stargin and ending
@@ -58,5 +60,25 @@ impl Current {
             ending_timestamp: chrono::Local::now().timestamp(),
             item: self.item,
        }  
+    }
+
+    /// Look at the file on disk holding the current tracking info
+    pub fn open() -> Option<Current> {
+        let raw = fs::read_to_string(".workingon").ok()?;
+        let mut iter = raw.split(' ');
+
+        let starting_timestamp = iter.next()?.parse::<i64>().ok()?;
+        let item = iter.next()?.into();
+
+        Some(
+            Current {
+                starting_timestamp,
+                item,
+            }
+        )
+    }
+
+    pub fn save(self) -> std::io::Result<()> {
+        fs::write(".workingon", format!("{} {}", self.starting_timestamp, self.item))
     }
 }
