@@ -85,4 +85,14 @@ impl Current {
     pub fn clear() -> std::io::Result<()> {
         fs::write(".workingon", "") 
     }
+
+    /// Get a reference to the current's starting timestamp.
+    pub fn starting_timestamp(&self) -> &i64 {
+        &self.starting_timestamp
+    }
+
+    /// Get a reference to the current's item.
+    pub fn item(&self) -> &str {
+        self.item.as_str()
+    }
 }

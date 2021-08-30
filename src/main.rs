@@ -8,7 +8,7 @@ use structopt::StructOpt;
 
 #[derive(StructOpt)]
 enum Command {
-    On {
+    Now {
         item: String,
     },
 
@@ -20,7 +20,7 @@ enum Command {
 fn main() {
 
     match Command::from_args() {
-        Command::On { item } => { Record::start(&item).save().unwrap(); }
+        Command::Now { item } => { Record::start(&item).save().unwrap(); }
         Command::Done => { 
             match Current::open() {
                 Some(current) => {
@@ -38,6 +38,13 @@ fn main() {
                 },
             }
         },
-        Command::What => todo!(),
+        Command::What => {
+            match Current::open() {
+                Some(current) => {
+                    println!("Working on {}, for {} seconds", current.item(), chrono::Local::now().timestamp() - current.starting_timestamp());
+                }, 
+                None => todo!(),
+            }
+        },
     }
 }

@@ -1,5 +1,5 @@
 [package]
-name = "working"
+name = "doing"
 version = "0.1.0"
 edition = "2018"
 
@@ -7,4 +7,6 @@ edition = "2018"
 
 [dependencies]
 chrono = "0.4.19"
+csv = "1.1.6"
 serde = { version = "1.0.130", features = ["derive"] }
+structopt = "0.3.23"

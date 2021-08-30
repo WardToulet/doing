@@ -1,24 +1,24 @@
-# Working
+# Doing
 
 The one stop shop to track all your time.
 
 ## Commands
 
-### On
+### Now
 
-Example: `working on programming`
+Example: `doing now programming`
 
-Start tracking a new working item.
+Start tracking a new doing item.
 
 ### Done
 
-Example: `working done`
+Example: `doing done`
 
 Stop tracking the currently tracked item.
 
 ### What 
 
-Example: `working what`
+Example: `doing what`
 
 Display the currently tracked item if any.
 
