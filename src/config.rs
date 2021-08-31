@@ -16,6 +16,10 @@ pub enum Store {
         #[serde(default = "default_csv_path")]
         path: PathBuf,
     },
+    Toml {
+        #[serde(default = "default_toml_path")]
+        path: PathBuf,
+    },
 }
 
 impl Default for Store {
@@ -49,9 +53,10 @@ impl Config {
     }
 
     /// Get the store
-    pub fn get_store(&self) -> impl store::Store {
+    pub fn get_store<'a>(&'a self) -> Box<dyn store::Store + 'a> {
         match &self.store {
-            Store::Csv { path } => store::CsvStore::open(path),
+            Store::Csv { path } => Box::new(store::CsvStore::open(path)),
+            Store::Toml { path } => Box::new(store::TomlStore::open(path)),
         }
     }
 }
@@ -79,6 +84,14 @@ pub fn get_config() -> Result<Config, ConfigError> {
 fn default_csv_path() -> PathBuf {
     let mut path = dirs::home_dir().expect("Cannot find the users home directory.");
     path.push("doing.csv");
+
+    path
+}
+
+/// Return the default path for the csv file
+fn default_toml_path() -> PathBuf {
+    let mut path = dirs::home_dir().expect("Cannot find the users home directory.");
+    path.push("doing.toml");
 
     path
 }

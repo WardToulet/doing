@@ -2,7 +2,6 @@ use crate::{
     config::{self, Config},
     current::Current,
     record::Record,
-    store::Store,
 };
 
 pub struct Doing {

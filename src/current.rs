@@ -36,7 +36,7 @@ impl Current {
         Current {
             starting_timestamp: chrono::Local::now().timestamp(),
             item: item.into(),
-            tag: tag.map(|tag| tag.into())
+            tag
         }
     }
 

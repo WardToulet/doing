@@ -1,17 +1,8 @@
-use std::{
-    fs,
-    path::{Path, PathBuf},
-};
+use std::{fs, path::{Path, PathBuf}};
 
 use crate::record::Record;
 
-/// A record store can store and retrieve records
-pub trait Store {
-    /// Add a record to the store
-    fn push(&mut self, record: &Record);
-
-    fn records(&self) -> &Vec<Record>;
-}
+use super::Store;
 
 /// A record store that keeps all the records in memory and can dump them to a file
 pub struct CsvStore {
