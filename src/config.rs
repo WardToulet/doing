@@ -1,4 +1,3 @@
-use dirs;
 use serde::{self, Deserialize, Serialize};
 use std::{fs, path::PathBuf};
 
@@ -13,7 +12,7 @@ pub enum ConfigError {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "type")]
 pub enum Store {
-    CSV {
+    Csv {
         #[serde(default = "default_csv_path")]
         path: PathBuf,
     },
@@ -21,7 +20,7 @@ pub enum Store {
 
 impl Default for Store {
     fn default() -> Self {
-        Store::CSV {
+        Store::Csv {
             path: default_csv_path(),
         }
     }
@@ -52,7 +51,7 @@ impl Config {
     /// Get the store
     pub fn get_store(&self) -> impl store::Store {
         match &self.store {
-            Store::CSV { path } => store::CsvStore::open(path),
+            Store::Csv { path } => store::CsvStore::open(path),
         }
     }
 }

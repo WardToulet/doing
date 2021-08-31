@@ -4,7 +4,6 @@ mod doing;
 mod record;
 mod store;
 
-use config::Config;
 use structopt::StructOpt;
 
 use crate::doing::Error;

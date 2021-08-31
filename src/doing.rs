@@ -12,7 +12,7 @@ pub struct Doing {
 pub enum Error {
     AlreadyTracking(Current),
     NotTrackingAnything,
-    IoError(std::io::Error),
+    Io(std::io::Error),
 }
 
 impl Doing {
@@ -27,10 +27,10 @@ impl Doing {
     pub fn now(&self, item: &str) -> Result<Current, Error> {
         match Current::get_current(self.config.current_path()) {
             None => {
-                let current = Current::start(item.into());
+                let current = Current::start(item);
                 current
                     .write(self.config.current_path())
-                    .map_err(Error::IoError)?;
+                    .map_err(Error::Io)?;
                 Ok(current)
             }
             Some(current) => Err(Error::AlreadyTracking(current)),
@@ -45,7 +45,7 @@ impl Doing {
                 self.config.get_store().push(&record);
 
                 // Clear the current file
-                Current::clear(self.config.current_path()).map_err(Error::IoError)?;
+                Current::clear(self.config.current_path()).map_err(Error::Io)?;
 
                 Ok(record)
             }
