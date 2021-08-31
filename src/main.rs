@@ -1,16 +1,17 @@
-mod record_store;
+mod config;
+mod current;
+mod doing;
 mod record;
+mod store;
 
-use crate::record::{Current, Record};
-use crate::record_store::RecordStore;
-
+use config::Config;
 use structopt::StructOpt;
+
+use crate::doing::Error;
 
 #[derive(StructOpt)]
 enum Command {
-    Now {
-        item: Vec<String>,
-    },
+    Now { item: Vec<String> },
 
     Done,
 
@@ -18,34 +19,30 @@ enum Command {
 }
 
 fn main() {
+    let command = Command::from_args();
+    let doing = doing::Doing::new();
 
-    match Command::from_args() {
-        Command::Now { item } => { Record::start(&item.join(" ")).save().unwrap(); }
-        Command::Done => { 
-            match Current::open() {
-                Some(current) => {
-                    let record = current.stop();
-                    Current::clear();
-                    
-                    println!("Stop tracking {:#?}", record);
-
-                    let mut record_store = record_store::CsvRecordStore::open();
-                    record_store.push(record);
-                    record_store.save();
+    match command {
+        Command::Now { item } => {
+            match doing.now(&item.join(" ")) {
+                Ok(current) => println!("You are now tracking `{}`", current),
+                Err(Error::AlreadyTracking(current)) => {
+                    println!("Already tracking `{}`.\nTo stop tracking use `doing done`", current)
                 }
-                None => {
-                    println!("You are currently not tracking anything, to start tracking type `dong now <your item>`");
-                },
+                Err(_) => {}
             }
+        }
+        Command::Done => {
+            match doing.done() {
+                Ok(record) => println!("{}", record),
+                Err(_) => println!("You are not tracking anything currently,\nto start tracking ues `doing now <what you are doing>`"),
+            }
+            
         },
         Command::What => {
-            match Current::open() {
-                Some(current) => {
-                    println!("Working on {}, for {} seconds", current.item(), chrono::Local::now().timestamp() - current.starting_timestamp());
-                }, 
-                None => {
-                    println!("You are currently not tracking anything, to start tracking type `dong now <your item>`");
-                },
+            match doing.what() {
+                Some(current) => println!("You are {}.", current),
+                None => println!("Not tracking anything."),
             }
         },
     }

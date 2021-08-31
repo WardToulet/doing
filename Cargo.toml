@@ -8,5 +8,7 @@ edition = "2018"
 [dependencies]
 chrono = "0.4.19"
 csv = "1.1.6"
+dirs = "3.0.2"
 serde = { version = "1.0.130", features = ["derive"] }
 structopt = "0.3.23"
+toml = "0.5.8"
