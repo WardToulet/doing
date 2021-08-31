@@ -24,10 +24,10 @@ impl Doing {
     }
 
     /// Start tracking an item, returns an error when anlready tracking something
-    pub fn now(&self, item: &str) -> Result<Current, Error> {
+    pub fn now(&self, item: &str, tag: Option<String>) -> Result<Current, Error> {
         match Current::get_current(self.config.current_path()) {
             None => {
-                let current = Current::start(item);
+                let current = Current::start(item, tag);
                 current
                     .write(self.config.current_path())
                     .map_err(Error::Io)?;

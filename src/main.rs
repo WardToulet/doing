@@ -10,7 +10,7 @@ use crate::doing::Error;
 
 #[derive(StructOpt)]
 enum Command {
-    Now { item: Vec<String> },
+    Now { item: String, tag: Option<String>, },
 
     Done,
 
@@ -22,8 +22,8 @@ fn main() {
     let doing = doing::Doing::new();
 
     match command {
-        Command::Now { item } => {
-            match doing.now(&item.join(" ")) {
+        Command::Now { tag, item } => {
+            match doing.now(&item, tag) {
                 Ok(current) => println!("You are now tracking `{}`", current),
                 Err(Error::AlreadyTracking(current)) => {
                     println!("Already tracking `{}`.\nTo stop tracking use `doing done`", current)

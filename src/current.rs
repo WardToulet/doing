@@ -12,6 +12,9 @@ pub struct Current {
 
     /// What is being tracked
     pub item: String,
+
+    /// A tag to be able to sort the project
+    pub tag: Option<String>,
 }
 
 impl Current {
@@ -29,10 +32,11 @@ impl Current {
     /// // To end tracking time we just call the `.stop` method
     /// let record = record.stop();
     /// ```
-    pub fn start(item: &str) -> Current {
+    pub fn start(item: &str, tag: Option<String>) -> Current {
         Current {
             starting_timestamp: chrono::Local::now().timestamp(),
             item: item.into(),
+            tag: tag.map(|tag| tag.into())
         }
     }
 
@@ -49,20 +53,11 @@ impl Current {
 
     /// Look at the file on disk holding the current tracking info
     pub fn get_current<P: AsRef<Path>>(path: P) -> Option<Current> {
-        let raw = fs::read_to_string(path).ok()?;
-        let mut iter = raw.split('|');
-
-        let starting_timestamp = iter.next()?.parse::<i64>().ok()?;
-        let item = iter.next()?.into();
-
-        Some(Current {
-            starting_timestamp,
-            item,
-        })
+        toml::from_slice(&fs::read(path).ok()?).ok()
     }
 
     pub fn write<P: AsRef<Path>>(&self, path: P) -> std::io::Result<()> {
-        fs::write(path, format!("{}|{}", self.starting_timestamp, self.item))
+        fs::write(path, &toml::to_vec(&self).expect("Serialization failed"))
     }
 
     pub fn clear<P: AsRef<Path>>(path: P) -> std::io::Result<()> {
@@ -73,6 +68,11 @@ impl Current {
 impl Display for Current {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         // TODO: add the elased time to the display
-        write!(f, "{}", self.item)
+        write!(f, "{}", self.item)?;
+        if let Some(tag) = &self.tag {
+            write!(f, " with tag {}", tag)?;
+        }
+
+        Ok(())
     }
 }
