@@ -16,6 +16,8 @@ pub struct Record {
 
     /// What is being tracked
     pub item: String,
+
+    pub tag: Option<String>,
 }
 
 impl Display for Record {

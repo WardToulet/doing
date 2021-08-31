@@ -48,6 +48,7 @@ impl Current {
             starting_timestamp: self.starting_timestamp,
             ending_timestamp: chrono::Local::now().timestamp(),
             item: self.item,
+            tag: self.tag,
         }
     }
 
